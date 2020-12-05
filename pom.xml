@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.darian</groupId>
+    <artifactId>darian-lucene-vertx</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+
+        <ik-analyzer.version>8.3.0</ik-analyzer.version>
+        <lucene.version>7.0.1</lucene.version>
+        <lucene-core.version>${lucene.version}</lucene-core.version>
+        <lucene-queryparser.version>${lucene.version}</lucene-queryparser.version>
+        <lucene-analyzers-common.version>${lucene.version}</lucene-analyzers-common.version>
+        <lucene-highlighter.version>${lucene.version}</lucene-highlighter.version>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
+        <maven-shade-plugin.version>2.4.3</maven-shade-plugin.version>
+        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
+        <exec-maven-plugin.version>1.5.0</exec-maven-plugin.version>
+
+        <vertx.version>3.9.4</vertx.version>
+        <junit-jupiter.version>5.4.0</junit-jupiter.version>
+
+        <main.verticle>com.darian.darianLuceneVertx.DarianLuceneVerticle</main.verticle>
+
+        <lombok.version>1.18.2</lombok.version>
+
+        <concurrentlinkedhashmap-lru.version>1.4.2</concurrentlinkedhashmap-lru.version>
+
+        <javax-mail.version>1.6.2</javax-mail.version>
+        <sun-mail.version>${javax-mail.version}</sun-mail.version>
+    </properties>
+
+    <dependencies>
+
+        <!-- 邮箱发送通知 -->
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-junit5</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+
+        <!-- log4j2 日志配置-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jul</artifactId>
+            <version>2.8.2</version>
+        </dependency>
+
+        <!--    <dependency>-->
+        <!--      <groupId>com.lmax</groupId>-->
+        <!--      <artifactId>disruptor</artifactId>-->
+        <!--      <version>3.3.6</version>-->
+        <!--    </dependency>-->
+        <!--日志配置结束-->
+
+
+        <!--  https://github.com/magese/ik-analyzer-solr 5/6/7//8  -->
+        <dependency>
+            <groupId>com.github.magese</groupId>
+            <artifactId>ik-analyzer</artifactId>
+        </dependency>
+
+
+        <!-- lucene核心库 -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+        </dependency>
+        <!-- Lucene的查询解析器 -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+        </dependency>
+        <!-- lucene的默认分词器库 -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+        </dependency>
+        <!-- lucene的高亮显示 -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-highlighter</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>io.vertx</groupId>
+                <artifactId>vertx-stack-depchain</artifactId>
+                <version>${vertx.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--  https://github.com/magese/ik-analyzer-solr 5/6/7//8  -->
+            <dependency>
+                <groupId>com.github.magese</groupId>
+                <artifactId>ik-analyzer</artifactId>
+                <version>${ik-analyzer.version}</version>
+            </dependency>
+
+
+            <!-- lucene核心库 -->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-core</artifactId>
+                <version>${lucene-core.version}</version>
+            </dependency>
+            <!-- Lucene的查询解析器 -->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-queryparser</artifactId>
+                <version>${lucene-queryparser.version}</version>
+            </dependency>
+            <!-- lucene的默认分词器库 -->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-analyzers-common</artifactId>
+                <version>${lucene-analyzers-common.version}</version>
+            </dependency>
+            <!-- lucene的高亮显示 -->
+            <dependency>
+                <groupId>org.apache.lucene</groupId>
+                <artifactId>lucene-highlighter</artifactId>
+                <version>${lucene-highlighter.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>javax.mail</artifactId>
+                <version>${sun-mail.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <!--                <configuration>-->
+                <!--                    <release>11</release>-->
+                <!--                </configuration>-->
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>com.darian.darianLuceneVertx.application.MyLauncher</Main-Class>
+                                        <Main-Verticle>${main.verticle}</Main-Verticle>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/services/io.vertx.core.spi.VerticleFactory</resource>
+                                </transformer>
+                            </transformers>
+                            <artifactSet>
+                            </artifactSet>
+                            <outputFile>${project.build.directory}/${project.artifactId}-${project.version}-fat.jar
+                            </outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${exec-maven-plugin.version}</version>
+                <configuration>
+                    <mainClass>com.darian.darianLuceneVertx.application.MyLauncher</mainClass>
+                    <arguments>
+                        <argument>run</argument>
+                        <argument>${main.verticle}</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
